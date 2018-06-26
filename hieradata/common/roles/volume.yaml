@@ -8,13 +8,15 @@ include:
     - profile::openstack::openrc
     - profile::logging::rsyslog::client
 
+openstack_version: 'ocata' #FIXME
+
 profile::base::common::packages:
-  'python-openstackclient': {}
   'python2-oslo-policy': {}
   'python2-keystonemiddleware': {}
   'bash-completion': {}
   'bash-completion-extras': {}
   'jq': {}
+#  'python-openstackclient': {}
 
 profile::base::selinux::manage_selinux:   false
 profile::openstack::openrc::password:     "%{hiera('cinder_api_password')}"
