@@ -129,6 +129,7 @@ profile::network::services::dns_records:
     "status.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
     "metric.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
     "object.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
+    "report.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
     "ns.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart')}.251"
     "resolver.%{hiera('domain_public')}":                 "%{hiera('netcfg_public_netpart')}.252"
     "dashboard.%{hiera('domain_frontend')}":              "%{hiera('netcfg_public_netpart')}.254"
@@ -221,10 +222,13 @@ neutron_api_password:                               'neutron_pass'
 nova_api_password:                                  'nova_pass'
 gnocchi_api_password:                               'gnocchi'
 ceilometer_api_password:                            'ceilometer_pass'
+access_api_password:                                'access_pass'
 
 # rabbitmq
 rabbitmq::default_pass:                             'guest'
 rabbitmq::erlang_cookie:                            'Himlardev667'
+access_rabbit_password:                             'access_pass'
+himlarcli_rabbit_password:                          'himlarcli'
 
 # cinder.yaml
 cinder::db::mysql::password:                        'cinder_pass'
@@ -285,9 +289,6 @@ monitor_metric_password:                            'monitor_pass'
 swift::swift_hash_path_suffix:                      'shared_secret'
 swift_api_password:                                 'swift_pass'
 dispersion_api_password:                            'dispersion_pass'
-
-# himlarcli
-himlarcli_rabbit_password:                          'himlarcli'
 
 # The root user password: himlardev
 accounts::root_user::password:                      '$1$vagrant$z3l/WWbF3HllJk0tnqO3i/'
