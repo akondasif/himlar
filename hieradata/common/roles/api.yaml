@@ -28,7 +28,7 @@ profile::base::network::manage_dummy:                               true
 profile::highavailability::loadbalancing::haproxy::manage_haproxy:  true
 profile::highavailability::loadbalancing::haproxy::manage_firewall: true
 profile::highavailability::loadbalancing::haproxy::firewall_ports:
-  public:    ['5000', '8041', '8774', '8776', '9292', '9696', '6082', '8080']
+  public:    ['5000', '8041', '8774', '8776', '9292', '9696', '6082', '8080', '8081']
   internal:  ['5000', '8041', '8774', '8776', '9292', '9696', '35357', '8080']
   mgmt:      ['9000']
   limited:   ['80', '443']
@@ -63,6 +63,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
       - "network.api.%{hiera('domain_public')}:9696":       'bk_network'
       - "metric.api.%{hiera('domain_public')}:8041":        'bk_metric'
       - "compute.api.%{hiera('domain_public')}:8774":       'bk_compute'
+      - "placement.api.%{hiera('domain_public')}:8081":     'bk_placement'
       - "volume.api.%{hiera('domain_public')}:8776":        'bk_volume'
       - "image.api.%{hiera('domain_public')}:9292":         'bk_image'
       - "object.api.%{hiera('domain_public')}:8080":        'bk_object'
@@ -81,6 +82,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
       - "network.%{hiera('domain_trp')}:9696":          'bk_network'
       - "metric.%{hiera('domain_trp')}:8041":           'bk_metric'
       - "compute.%{hiera('domain_trp')}:8774":          'bk_compute'
+      - "placement.%{hiera('domain_trp')}:80":          'bk_placement'
       - "volume.%{hiera('domain_trp')}:8776":           'bk_volume'
       - "image.%{hiera('domain_trp')}:9292":            'bk_image'
       - "object.%{hiera('domain_trp')}:8080":           'bk_object'
@@ -92,6 +94,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_frontends:
       "%{::ipaddress_public1}:5000":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}", 'crt', "%{hiera('api_ssl_pem')}"]
       "%{::ipaddress_public1}:8041":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
       "%{::ipaddress_public1}:8080":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
+      "%{::ipaddress_public1}:8081":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
       "%{::ipaddress_public1}:8774":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
       "%{::ipaddress_public1}:8776":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
       "%{::ipaddress_public1}:9292":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
@@ -143,6 +146,10 @@ profile::highavailability::loadbalancing::haproxy::haproxy_backends:
       - errorfile:    '503 /etc/haproxy/error.api.http'
       - balance:      'roundrobin'
   bk_compute:
+    options:
+      - option:       'httplog'
+      - errorfile:    '503 /etc/haproxy/error.api.http'
+  bk_placement:
     options:
       - option:       'httplog'
       - errorfile:    '503 /etc/haproxy/error.api.http'
@@ -205,6 +212,12 @@ profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
     server_names:       ['%{::location}-novactrl-01']
     ipaddresses:        ["%{hiera('netcfg_trp_netpart')}.66"]
     ports:              '8774'
+    options:            'check'
+  placement:
+    listening_service:  'bk_placement'
+    server_names:       ['%{::location}-novactrl-01']
+    ipaddresses:        ["%{hiera('netcfg_trp_netpart')}.66"]
+    ports:              '80'
     options:            'check'
   volume:
     listening_service:  'bk_volume'
@@ -289,6 +302,10 @@ profile::base::selinux::ports:
     seltype:  'http_port_t'
     protocol: 'tcp'
     port:     8080
+  placement-http:
+    seltype:  'http_port_t'
+    protocol: 'tcp'
+    port:     8081
   console-http:
     seltype:  'http_port_t'
     protocol: 'tcp'
