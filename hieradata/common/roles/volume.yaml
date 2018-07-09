@@ -17,7 +17,7 @@ profile::base::common::packages:
   'bash-completion-extras': {}
   'jq': {}
   'openstack-selinux': {}
-#  'python-openstackclient': {}
+  'python-openstackclient': {}
 
 profile::base::selinux::manage_selinux:   false
 profile::openstack::openrc::password:     "%{hiera('cinder_api_password')}"
