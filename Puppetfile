@@ -162,6 +162,7 @@ mod 'neutron', :ref => '10.4.0',                    :git => github + 'openstack/
 mod 'gnocchi', :ref => '10.4.0',                    :git => github + 'openstack/puppet-gnocchi'
 mod 'swift', :ref => 'norcams/ocata',               :git => github + 'norcams/puppet-swift'
 mod 'ceilometer', :ref => '10.4.0',                 :git => github + 'openstack/puppet-ceilometer'
+mod 'designate', :ref => 'stable/pike',             :git => github + 'openstack/puppet-designate'
 
 mod 'oslo', :ref => '10.4.0',                       :git => github + 'openstack/puppet-oslo'
 mod 'openstacklib', :ref => '10.5.0',               :git => github + 'openstack/puppet-openstacklib'
